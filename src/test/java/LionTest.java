@@ -19,8 +19,8 @@ public class LionTest {
     Feline newFeline = new Feline();
 
     @Test
-    public void lionGetKittensTest() {
-        Lion lion = new Lion(feline);
+    public void lionGetKittensTest() throws Exception {
+        Lion lion = new Lion(TestConstants.FEMALE, feline);
         lion.getKittens();
         Mockito.verify(feline).getKittens();
 
@@ -28,20 +28,21 @@ public class LionTest {
 
     @Test
     public void lionGetFoodTest() throws Exception {
-        Lion lion = new Lion(feline);
+        Lion lion = new Lion(TestConstants.MALE, feline);
         lion.getFood();
         Mockito.verify(feline).getFood(TestConstants.PREDATOR);
     }
 
     @Test
-    public void shouldReturnDefaultFelineKittensQuantity() {
-        Lion lion = new Lion(newFeline);
+    public void shouldReturnDefaultFelineKittensQuantity() throws Exception {
+        Lion lion = new Lion(TestConstants.MALE, newFeline);
         assertEquals(TestConstants.DEFAULT_KITTENS_QUANTITY, lion.getKittens());
     }
 
     @Test
     public void shouldReturnPredatorFood() throws Exception {
-        Lion lion = new Lion(newFeline);
+        Lion lion = new Lion(TestConstants.FEMALE, feline);
+        Mockito.when(feline.getFood(TestConstants.PREDATOR)).thenReturn(TestConstants.PREDATOR_FOOD);
         assertEquals(TestConstants.PREDATOR_FOOD, lion.getFood());
     }
 
@@ -49,7 +50,7 @@ public class LionTest {
     public void shouldThrowExceptionIfSexIsWrong() {
         Exception exception =
                 assertThrows("Введено некорректное значение пола",
-                        Exception.class, () -> new Lion(TestConstants.PREDATOR));
+                        Exception.class, () -> new Lion(TestConstants.PREDATOR, newFeline));
         assertEquals(TestConstants.SEX_INPUT_ERROR, exception.getMessage());
     }
 }
